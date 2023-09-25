@@ -1,0 +1,87 @@
+// @FAIL-V8
+
+// Generic types
+
+type Pair<X, Y> = (Y, X);
+
+let p01 : Pair<Text, ()> = ((), "5");
+let p02 : Pair<Int$, Bool$> = (true$, 6$);
+let p03 : Pair<Float$, Byte$> = ("1"[0]$, 3.14$);
+
+assert p01.1[0] == "5"[0];
+assert p02.0.$;
+assert p02.1.$ == 6;
+assert p03.0.$ == "1"[0];
+assert p03.1.$ == 3.14;
+
+
+// Generic functions
+
+func pair<X, Y>(x : X, y : Y) : Pair<X, Y> { (y, x) };
+
+func fst<X, Y>(p : Pair<X, Y>) : X { p.1 };
+func snd<X, Y>(p : Pair<X, Y>) : Y { p.0 };
+
+let p1 = pair<Text, ()>("6", ());
+let x1 = fst<Text, ()>(p1);
+let y1 = snd<Text, ()>(p1);
+assert p1.1[0] == "6"[0];
+assert x1[0] == "6"[0];
+
+let p2 = pair<Int$, Bool$>(6$, true$);
+assert fst<Int$, Bool$>(p2).$ == 6;
+assert snd<Int$, Bool$>(p2).$;
+
+let p3 = pair<Float$, Byte$>(3.14$, "1"[0]$);
+assert fst<Float$, Byte$>(p3).$ == 3.14;
+assert snd<Float$, Byte$>(p3).$ == "1"[0];
+
+
+func reverse<X>(a : X[]) {
+  var i : Int = 0;
+  while i < #a - i - 1 {
+    let tmp = a[i];
+    a[i] := a[#a - i - 1];
+    a[#a - i - 1] := tmp;
+    i := i + 1;
+  };
+};
+
+let a = [1$, 2$, 3$, 4$];
+let b = [1$, 2$, 3$, 4$, 5$];
+reverse<Int$>(a);
+reverse<Int$>(b);
+assert a[0].$ == 4;
+assert a[1].$ == 3;
+assert a[2].$ == 2;
+assert a[3].$ == 1;
+assert b[0].$ == 5;
+assert b[1].$ == 4;
+assert b[2].$ == 3;
+assert b[3].$ == 2;
+assert b[4].$ == 1;
+
+
+func reversed<X>(a : X[], init : X) : X[] {
+  let b = new X[#a](init);
+  var i : Int = 0;
+  while i < #a {
+    b[i] := a[#a - i - 1];
+    i := i + 1;
+  };
+  return b;
+};
+
+let a2 = ["1", "2", "3"];
+let b2 = reversed<Text>(a2, "");
+assert b2[0] == "3";
+assert b2[1] == "2";
+assert b2[2] == "1";
+
+assert reversed<Int[]>([[7]], [0])[0][0] == 7;
+
+func nul<X>() : X {
+  return null;
+};
+
+assert nul<Int$>() == null;

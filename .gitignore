@@ -27,3 +27,11 @@ setup.log
 
 # Local OPAM switch
 _opam/
+
+# Wob
+_wasm
+wob
+
+# Temporaries
+*~
+\#*

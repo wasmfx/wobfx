@@ -1,0 +1,45 @@
+// Generic classes
+
+class PA<T, U>(n : Int, x : T, y : U) {
+  let s = new (T, U)[n]((x, y));
+  func getL(i : Int) : T { s[i].0 };
+  func getR(i : Int) : U { s[i].1 };
+};
+
+class PAS<T, U>(n : Int, x : T, y : U) <: PA<T, U>(n, x, y) {
+  func setL(i : Int, x : T) { s[i] := (x, s[i].1) };
+  func setR(i : Int, y : U) { s[i] := (s[i].0, y) };
+};
+
+let pas = new PAS<Int$, Float$>(20, 0$, 3.14$);
+
+assert pas.getL(1).$ == 0;
+assert pas.getR(1).$ == 3.14;
+
+pas.setL(1, 5$);
+assert pas.getL(1).$ == 5;
+assert pas.getR(1).$ == 3.14;
+
+pas.setR(1, 2.71$);
+assert pas.getL(1).$ == 5;
+assert pas.getR(1).$ == 2.71;
+
+
+// Generic methods
+
+class PAG<T, U>(n : Int, x : T, y : U) <: PAS<T, U>(n, x, y) {
+  func replaceL<V>(z : V) : PAG<V, U> {
+    let r = new PAG<V, U>(n, z, y);
+    var i : Int = 0;
+    while i < n {
+      r.s[i] := (z, getR(i));
+      i := i + 1;
+    };
+    return r;
+  };
+};
+
+let pag = new PAG<Int$, Float$>(10, 7$, 3.14$);
+
+let pag2 : PAG<Bool$, Float$> = pag.replaceL<Bool$>(false$);
+assert ! pag2.getL(9).$;

@@ -1,0 +1,46 @@
+// Expression representation and visitor
+
+class Exp() {
+  func accept<A, R>(v : Visitor<A, R>, a : A) : R { accept<A, R>(v, a) };
+};
+
+class Lit(i : Int) <: Exp() {
+  func accept<A, R>(v : Visitor<A, R>, a : A) : R {
+    v.visitLit(this, a);
+  };
+  func value() : Int { i };
+};
+
+class Var(x : Text) <: Exp() {
+  func accept<A, R>(v : Visitor<A, R>, a : A) : R {
+    v.visitVar(this, a);
+  };
+  func name() : Text { x };
+};
+
+class Bin(e1 : Exp, e2 : Exp) <: Exp() {
+  func left() : Exp { e1 };
+  func right() : Exp { e2 };
+};
+
+class Add(e1 : Exp, e2 : Exp) <: Bin(e1, e2) {
+  func accept<A, R>(v : Visitor<A, R>, a : A) : R {
+    v.visitAdd(this, a);
+  };
+};
+
+class Mul(e1 : Exp, e2 : Exp) <: Bin(e1, e2) {
+  func accept<A, R>(v : Visitor<A, R>, a : A) : R {
+    v.visitMul(this, a);
+  };
+};
+
+class Visitor<A, R>() {
+  func visit(exp : Exp, a : A) : R {
+    exp.accept<A, R>(this, a);
+  };
+  func visitLit(exp : Lit, a : A) : R { visitLit(exp, a) };
+  func visitVar(exp : Var, a : A) : R { visitVar(exp, a) };
+  func visitAdd(exp : Add, a : A) : R { visitAdd(exp, a) };
+  func visitMul(exp : Mul, a : A) : R { visitMul(exp, a) };
+};
