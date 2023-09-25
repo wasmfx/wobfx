@@ -1,6 +1,6 @@
-# Wob -- Wasm Objects
+# WobFX -- WasmFX Objects
 
-An experimental object-oriented language and implementation for exploring and evaluating the Wasm [GC proposal](https://github.com/WebAssembly/gc/#gc-proposal-for-webassembly).
+An experimental object-oriented language and implementation for exploring and evaluating the WasmFX extension.
 
 ## Overview
 
